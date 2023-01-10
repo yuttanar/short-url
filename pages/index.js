@@ -6,11 +6,24 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Button, Container } from "@mui/material";
+import { Button, Chip, Container, Typography } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
+  } = useForm({
+    defaultValues: {
+      longUrl: "",
+    },
+    mode: "all",
+  });
+  const onSubmit = (data) => console.log(data);
+
   return (
     <>
       <Head>
@@ -31,7 +44,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{" "}Yuttanar
+              By Yuttanar
             </a>
           </div>
         </div>
@@ -44,25 +57,52 @@ export default function Home() {
                 p: "2px 4px",
                 display: "flex",
                 alignItems: "center",
-                width:"80vw"
+                width: "80vw",
               }}
               elevation={10}
+              onSubmit={handleSubmit(onSubmit)}
             >
-              <InputBase
-                sx={{ ml: 1, flex: 1 }}
-                placeholder="Your Long URL"
-                inputProps={{ "aria-label": "Your Long URL" }}
-                fullWidth
+              <Controller
+                name="longUrl"
+                control={control}
+                rules={{
+                  required: { value: true, message: "This field is required" },
+                  pattern: {
+                    value:
+                      /(https:\/\/|http:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/,
+                    message: "Long URL not matching url pattern",
+                  },
+                }}
+                render={({ field }) => (
+                  <>
+                    <InputBase
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder="Your Long URL"
+                      inputProps={{ "aria-label": "Your Long URL" }}
+                      fullWidth
+                      {...field}
+                    />
+                  </>
+                )}
               />
+
               <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
               <Button
                 size="small"
                 variant="contained"
+                type="submit"
+                disabled={!isDirty || !isValid}
                 startIcon={<ContentCutIcon />}
               >
                 Shorten
               </Button>
             </Paper>
+            <br />
+            {errors && errors.longUrl && (
+              <Typography variant="subtitle1" align="center" >
+                <Chip variant="contained" color="error" size="small" label={errors.longUrl.message} ></Chip>
+              </Typography>
+            )}
           </Container>
         </div>
 
