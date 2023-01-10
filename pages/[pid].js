@@ -49,12 +49,12 @@ const HashPage = () => {
             minHeight: "100vh",
           }}
         >
-          <Grid item sx={12} lg={12} xl={12}>
+          <Grid item xs={12} lg={12} xl={12}>
             <Typography variant="h3" align="center" component={"div"}>
               URL not found
             </Typography>
           </Grid>
-          <Grid item sx={12} lg={12} xl={12} style={{ textAlign: "center" }}>
+          <Grid item xs={12} lg={12} xl={12} style={{ textAlign: "center" }}>
             <Link href="/">
               <Button variant="contained" startIcon={<Home />}>
                 BACK TO HOME

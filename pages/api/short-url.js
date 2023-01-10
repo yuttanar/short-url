@@ -3,7 +3,7 @@ import { customAlphabet } from "nanoid";
 const redis = require("redis");
 
 const urlPattern =
-  /(https:\/\/|http:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/;
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -40,9 +40,9 @@ export default async function handler(req, res) {
       urlPath = nanoid();
       checkIsExist = await client.get(urlPath);
     }
-    await client.set(urlPath,longUrl);
+    await client.set(urlPath, longUrl);
     await client.disconnect();
-    res.status(200).json({ urlPath, longUrl });
+    res.status(200).json({ type: "success", urlPath, longUrl });
   } catch (error) {
     res.status(500).json({ type: "Error", code: 500 });
   }

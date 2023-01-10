@@ -6,12 +6,29 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import Divider from "@mui/material/Divider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Button, Chip, Container, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+import { useState } from "react";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [urlPath, setUrlPath] = useState();
+  const [open, setOpen] = useState(false);
   const {
     control,
     handleSubmit,
@@ -22,7 +39,80 @@ export default function Home() {
     },
     mode: "all",
   });
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    setOpen(true);
+    const result = await axios.post("/api/short-url", {
+      longUrl: data.longUrl,
+    });
+    if (result.data.type === "success") {
+      setUrlPath(result.data);
+    }
+    setOpen(false);
+  };
+
+  const handleCopy = (textToCopy) => {
+    let copyText = document.createElement("input");
+    document.body.appendChild(copyText);
+    // copyText.setAttribute("type", "hidden");
+    copyText.value = textToCopy;
+    // Select the text field
+    copyText.select();
+    copyText.setSelectionRange(0, 1000); // For mobile devices
+
+    navigator.clipboard.writeText(copyText.value).then(
+      () => {
+        /* clipboard successfully set */
+        document.body.removeChild(copyText);
+        toast.success(`คัดลอกแล้ว`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      },
+      (e) => {
+        try {
+          document.body.removeChild(copyText);
+          var input = document.createElement("input");
+          document.body.appendChild(input);
+          input.value = textToCopy;
+          input.select();
+          const result = document.execCommand("copy");
+          document.body.removeChild(input);
+          if (!result) {
+            throw new Error("document.execCommand failed");
+          }
+          toast.success(`คัดลอกแล้ว`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return true;
+        } catch (err) {
+          toast.error(`คัดลอกไม่ได้`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return false;
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -32,6 +122,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer />
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
@@ -69,7 +166,7 @@ export default function Home() {
                   required: { value: true, message: "This field is required" },
                   pattern: {
                     value:
-                      /(https:\/\/|http:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/,
+                      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/,
                     message: "Long URL not matching url pattern",
                   },
                 }}
@@ -77,8 +174,11 @@ export default function Home() {
                   <>
                     <InputBase
                       sx={{ ml: 1, flex: 1 }}
-                      placeholder="Your Long URL"
-                      inputProps={{ "aria-label": "Your Long URL" }}
+                      placeholder="Your Long URL Ex: https://github.com/yuttanar"
+                      inputProps={{
+                        "aria-label":
+                          "Your Long URL EX: https://github.com/yuttanar",
+                      }}
                       fullWidth
                       {...field}
                     />
@@ -99,9 +199,49 @@ export default function Home() {
             </Paper>
             <br />
             {errors && errors.longUrl && (
-              <Typography variant="subtitle1" align="center" >
-                <Chip variant="contained" color="error" size="small" label={errors.longUrl.message} ></Chip>
+              <Typography variant="subtitle1" align="center">
+                <Chip
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  label={errors.longUrl.message}
+                ></Chip>
               </Typography>
+            )}
+            <br />
+            {urlPath && (
+              <Grid container justifyContent={"center"}>
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardContent>
+                    <Typography
+                      noWrap
+                      gutterBottom
+                      variant="body2"
+                      color="text.secondary"
+                    >
+                      {urlPath.longUrl}
+                    </Typography>
+                    <Divider />
+                    <Typography variant="body2" color="primary">
+                      {`${window.location.protocol}//${window.location.hostname}/${urlPath.urlPath}`}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      fullWidth
+                      variant="contained"
+                      onClick={() => {
+                        handleCopy(
+                          `${window.location.protocol}//${window.location.hostname}/${urlPath.urlPath}`
+                        );
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
             )}
           </Container>
         </div>
