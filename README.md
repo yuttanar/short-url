@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fullstack Exam
 
-## Getting Started
+## Exam
+### 1. System Design
+จงออกแบบระบบย่อ URL พร้อม demo
+เช่น ย่อ http://my-order.ai/long-url/very-sub-path ให้เป็น http://shorturl.com/abcde
+สามารถระบุรายละเอียด เช่น 
+- database = redis เป็น in-memory database ดึงข้อมูลได้เร็ว (ใช้ตัวฟรีของ upstash.com)
+- front-end = next-js เป็น SSR ซึ่งทำ OpenGraph ได้ง่าย เวลาแชร์ลิงค์ใน social media
+- back-end = next-js/api มีมาให้ใน next-js อยู่แล้ว ไม่ต้องติดตั้งเพิ่ม ทำให้ใช้เวลาในการพัฒนาน้อย
+- deployment ใช้ Vercel โดย trigger จาก github branch main เนื่องจากฟรี และใช้งานง่าย เพียงแค่ push code ขึ้น github
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### 2. Up To You
+จงออกแบบข้อสอบเอง พร้อมเฉลย อย่างน้อย 1 ข้อ
+- LINE chat bot สำหรับ URL Shortener โดยส่ง url ที่ยาวเข้าไปที่แชท แล้ว bot จะตอบกลับมาด้วย url ที่ทำให้สั้นแล้ว
+- ใช้เครื่องมือฟรีทั้งหมด
+- ใช้ร่วมกับโปรเจคในข้อที่ 1 ได้
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
+- เมื่อทำเสร็จให้ push code ไปที่ Repository ของตนเอง แล้วแนบ Url ตอบกลับ Email บริษัท
+- เมื่อบริษัทตรวจสอบเรียบร้อย จะนัดหมายผู้มาทดสอบเพื่อสัมภาษณ์ผ่าน Video Conference ต่อไป
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Problem ?
+หากต้องการ Requirement เพิ่มเติม หรือมีข้อสงสัย ให้ติดต่อกลับโดยด่วน ผ่านช่องทางดังนี้
+- phattharaphon@myorder.ai
+- sompob@myorder.ai
+- traiwit@myorder.ai
