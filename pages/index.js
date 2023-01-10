@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import Paper from "@mui/material/Paper";
@@ -63,7 +62,7 @@ export default function Home() {
       () => {
         /* clipboard successfully set */
         document.body.removeChild(copyText);
-        toast.success(`คัดลอกแล้ว`, {
+        toast.success(`Copied`, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -86,7 +85,7 @@ export default function Home() {
           if (!result) {
             throw new Error("document.execCommand failed");
           }
-          toast.success(`คัดลอกแล้ว`, {
+          toast.success(`Copied`, {
             position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -166,7 +165,7 @@ export default function Home() {
                   required: { value: true, message: "This field is required" },
                   pattern: {
                     value:
-                      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/,
+                      /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$/,
                     message: "Long URL not matching url pattern",
                   },
                 }}
