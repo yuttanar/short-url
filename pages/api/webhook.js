@@ -56,16 +56,10 @@ export default async function handler(req, res) {
             data: data,
           };
 
-          axios(config)
-            .then((response) => {
-              console.log(JSON.stringify(response.data));
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          await axios(config)
         }
       });
-      res.status(200).end();
+      return res.status(200).json({type:"success"});
     } catch (err) {
       console.error(err);
       res.status(500).end();
