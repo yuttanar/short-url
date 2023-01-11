@@ -8,7 +8,7 @@
 - database = redis เป็น in-memory database ดึงข้อมูลได้เร็ว (ใช้ตัวฟรีของ upstash.com)
 - front-end = next-js เป็น SSR ซึ่งทำ OpenGraph ได้ง่าย เวลาแชร์ลิงค์ใน social media
 - back-end = next-js/api มีมาให้ใน next-js อยู่แล้ว ไม่ต้องติดตั้งเพิ่ม ทำให้ใช้เวลาในการพัฒนาน้อย
-- deployment ใช้ Vercel โดย trigger จาก github branch main เนื่องจากฟรี และใช้งานง่าย เพียงแค่ push code ขึ้น github
+- deployment ใช้ netlify โดย trigger จาก github branch main เนื่องจากฟรี และใช้งานง่าย เพียงแค่ push code ขึ้น github
 
 
 ### 2. Up To You
