@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       const events = req.body.events;
 
       // handle event here
-      events.forEach(async (event) => {
+      await events.forEach(async (event) => {
         let returnMessage = ""
         if (event.type === "message" && event.message.type === "text") {
           if (urlPattern.test(event.message.text)) {
