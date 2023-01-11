@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   }
   try {
     let client = redis.createClient({
-      url: process.env.DATABASE_URL,
+      url: process.env.REDIS_URL,
     });
 
     client.on("error", function (err) {

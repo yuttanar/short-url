@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         if (event.type === "message" && event.message.type === "text") {
           if (urlPattern.test(event.message.text)) {
             let client = redis.createClient({
-              url: process.env.DATABASE_URL,
+              url: process.env.REDIS_URL,
             });
 
             client.on("error", function (err) {

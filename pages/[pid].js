@@ -7,7 +7,7 @@ const redis = require("redis");
 export async function getServerSideProps(req) {
   const { pid } = req.query;
   let client = redis.createClient({
-    url: process.env.DATABASE_URL,
+    url: process.env.REDIS_URL,
   });
 
   client.on("error", function (err) {
