@@ -2,23 +2,16 @@ import { Home } from "@mui/icons-material";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import Head from "next/head";
 import Link from "next/link";
-const redis = require("redis");
+// const redis = require("redis");
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
 
 export async function getServerSideProps(req) {
   const { pid } = req.query;
-  let client = redis.createClient({
-    url: process.env.REDIS_URL,
-  });
 
-  client.on("error", function (err) {
-    throw err;
-  });
+  const longUrl = await redis.get(pid);
 
-  await client.connect();
-
-  const longUrl = await client.get(pid);
-
-  await client.disconnect();
 
   if (longUrl) {
     return {
@@ -29,12 +22,14 @@ export async function getServerSideProps(req) {
     };
   }
 
+  
+
   return {
     props: {},
   };
 }
 
-const HashPage = () => {
+const RedirectPage = () => {
   return (
     <div>
       <Head>
@@ -67,4 +62,4 @@ const HashPage = () => {
   );
 };
 
-export default HashPage;
+export default RedirectPage;

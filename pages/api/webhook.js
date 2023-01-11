@@ -1,6 +1,9 @@
-const redis = require("redis");
 import axios from "axios";
 import { customAlphabet } from "nanoid";
+
+import { Redis } from "@upstash/redis";
+
+const redis = Redis.fromEnv();
 
 const urlPattern =
   /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$/;
@@ -15,13 +18,6 @@ export default async function handler(req, res) {
         let returnMessage = ""
         if (event.type === "message" && event.message.type === "text") {
           if (urlPattern.test(event.message.text)) {
-            let client = redis.createClient({
-              url: process.env.REDIS_URL,
-            });
-
-            client.on("error", function (err) {
-              throw err;
-            });
 
             await client.connect();
 
@@ -30,15 +26,14 @@ export default async function handler(req, res) {
               5
             );
             let urlPath = nanoid();
-            let checkIsExist = await client.get(urlPath);
+            let checkIsExist = await redis.get(urlPath);
 
             while (checkIsExist !== null) {
               urlPath = nanoid();
-              checkIsExist = await client.get(urlPath);
+              checkIsExist = await redis.get(urlPath);
             }
-            await client.set(urlPath, event.message.text);
+            await redis.set(urlPath, event.message.text);
             returnMessage = "You short url: " + `${process.env.THIS_URL}/${urlPath}`
-            await client.disconnect();
           } else {
             returnMessage = "Your message is not url pattern , please Try again."
           }

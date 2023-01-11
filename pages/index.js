@@ -154,7 +154,8 @@ export default function Home() {
                 display: "flex",
                 alignItems: "center",
                 width: "80vw",
-                minWidth:345
+                minWidth:345,
+                maxWidth:800
               }}
               elevation={10}
               onSubmit={handleSubmit(onSubmit)}
