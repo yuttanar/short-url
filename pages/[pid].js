@@ -13,23 +13,23 @@ export async function getServerSideProps(req) {
   const longUrl = await redis.get(pid);
 
 
-  if (longUrl) {
-    return {
-      redirect: {
-        destination: longUrl,
-        permanent: false,
-      },
-    };
-  }
+  // if (longUrl) {
+  //   return {
+  //     redirect: {
+  //       destination: longUrl,
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   
 
   return {
-    props: {},
+    props: {longUrl},
   };
 }
 
-const RedirectPage = () => {
+const RedirectPage = ({longUrl}) => {
   return (
     <div>
       <Head>
@@ -52,7 +52,7 @@ const RedirectPage = () => {
           <Grid item xs={12} lg={12} xl={12} style={{ textAlign: "center" }}>
             <Link href="/">
               <Button variant="contained" startIcon={<Home />}>
-                BACK TO HOME
+                BACK TO HOME {longUrl}
               </Button>
             </Link>
           </Grid>
