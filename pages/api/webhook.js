@@ -19,7 +19,6 @@ export default async function handler(req, res) {
         if (event.type === "message" && event.message.type === "text") {
           if (urlPattern.test(event.message.text)) {
 
-            await client.connect();
 
             const nanoid = customAlphabet(
               "abcdefghijklmnopqrstuvwxyz0123456789",
