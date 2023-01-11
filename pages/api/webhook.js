@@ -48,7 +48,8 @@ export default async function handler(req, res) {
 
           let config = {
             method: "post",
-            url: "https://api.line.me/v2/bot/message/reply",
+            url: "https://webhook.site/66b97e5e-7419-4599-956b-3f681f526141",
+            // url: "https://api.line.me/v2/bot/message/reply",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${process.env.LINE_ACCESS_TOKEN}`,
