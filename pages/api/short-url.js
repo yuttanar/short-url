@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     }
     await client.set(urlPath, longUrl);
     await client.disconnect();
-    res.status(200).json({ type: "success", urlPath, longUrl });
+    res.status(200).json({ type: "success", urlPath:`${process.env.THIS_URL}/${urlPath}`, longUrl });
   } catch (error) {
     res.status(500).json({ type: "Error", code: 500 });
   }

@@ -154,6 +154,7 @@ export default function Home() {
                 display: "flex",
                 alignItems: "center",
                 width: "80vw",
+                minWidth:345
               }}
               elevation={10}
               onSubmit={handleSubmit(onSubmit)}
@@ -209,8 +210,8 @@ export default function Home() {
             )}
             <br />
             {urlPath && (
-              <Grid container justifyContent={"center"}>
-                <Card sx={{ maxWidth: 345 }}>
+              <Grid container justifyContent={"center"} >
+                <Card sx={{ maxWidth: 345 }} elevation={10}>
                   <CardContent>
                     <Typography
                       noWrap
@@ -222,7 +223,7 @@ export default function Home() {
                     </Typography>
                     <Divider />
                     <Typography variant="body2" color="primary">
-                      {`${window.location.protocol}//${window.location.hostname}/${urlPath.urlPath}`}
+                      {`${urlPath.urlPath}`}
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -232,7 +233,7 @@ export default function Home() {
                       variant="contained"
                       onClick={() => {
                         handleCopy(
-                          `${window.location.protocol}//${window.location.hostname}/${urlPath.urlPath}`
+                          `${urlPath.urlPath}`
                         );
                       }}
                     >
