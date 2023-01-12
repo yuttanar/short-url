@@ -22,22 +22,15 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export async function getServerSideProps({ query }) {
   const { text } = query;
-  console.log(text)
-
-  /* 
-    Pass the name param to the page
-  */
   return { props: { text } };
 }
 
 export default function Home({text}) {
-  const router = useRouter()
   const [urlPath, setUrlPath] = useState();
   const [open, setOpen] = useState(false);
   const {
@@ -204,7 +197,7 @@ export default function Home({text}) {
                 size="small"
                 variant="contained"
                 type="submit"
-                disabled={!isDirty || !isValid}
+                // disabled={!isDirty || !isValid}
                 startIcon={<ContentCutIcon />}
               >
                 Shorten
