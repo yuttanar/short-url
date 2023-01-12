@@ -1,8 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { customAlphabet } from "nanoid";
-import { Redis } from "@upstash/redis";
+import { createClient } from "redis";
 
-const redis = Redis.fromEnv();
+const redis = createClient({
+  url: process.env.REDIS_URL,
+});
 
 const urlPattern =
   /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$/;
@@ -24,6 +26,8 @@ export default async function handler(req, res) {
     });
   }
   try {
+    redis.on("error", (err) => console.log("Redis Client Error", err));
+    await redis.connect();
 
     const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
     let urlPath = nanoid();
@@ -34,8 +38,15 @@ export default async function handler(req, res) {
       checkIsExist = await redis.get(urlPath);
     }
     await redis.set(urlPath, longUrl);
-    res.status(200).json({ type: "success", urlPath:`${process.env.THIS_URL}/${urlPath}`, longUrl });
+    await redis.disconnect();
+    return res
+      .status(200)
+      .json({
+        type: "success",
+        urlPath: `${process.env.THIS_URL}/${urlPath}`,
+        longUrl,
+      });
   } catch (error) {
-    res.status(500).json({ type: "Error", code: 500 });
+    return res.status(500).json({ type: "Error", code: 500 });
   }
 }

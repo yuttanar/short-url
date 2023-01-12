@@ -1,9 +1,11 @@
 import axios from "axios";
 import { customAlphabet } from "nanoid";
 
-import { Redis } from "@upstash/redis";
+import { createClient } from "redis";
 
-const redis = Redis.fromEnv();
+const redis = createClient({
+  url: process.env.REDIS_URL,
+});
 
 const urlPattern =
   /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$/;
@@ -12,14 +14,14 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const events = req.body.events;
+      redis.on("error", (err) => console.log("Redis Client Error", err));
+      await redis.connect();
 
       // handle event here
       await events.forEach(async (event) => {
-        let returnMessage = ""
+        let returnMessage = "";
         if (event.type === "message" && event.message.type === "text") {
           if (urlPattern.test(event.message.text)) {
-
-
             const nanoid = customAlphabet(
               "abcdefghijklmnopqrstuvwxyz0123456789",
               5
@@ -32,9 +34,11 @@ export default async function handler(req, res) {
               checkIsExist = await redis.get(urlPath);
             }
             await redis.set(urlPath, event.message.text);
-            returnMessage = "You short url: " + `${process.env.THIS_URL}/${urlPath}`
+            returnMessage =
+              "You short url: " + `${process.env.THIS_URL}/${urlPath}`;
           } else {
-            returnMessage = "Your message is not url pattern , please Try again."
+            returnMessage =
+              "Your message is not url pattern , please Try again.";
           }
           let data = JSON.stringify({
             replyToken: event.replyToken,
@@ -56,11 +60,13 @@ export default async function handler(req, res) {
             data: data,
           };
 
-          await axios(config)
+          await axios(config);
         }
       });
-      return res.status(200).json({type:"success"});
+      return res.status(200).json({ type: "success" });
+      await redis.disconnect();
     } catch (err) {
+      await redis.disconnect();
       console.error(err);
       res.status(500).end();
     }
