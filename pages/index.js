@@ -27,7 +27,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export async function getServerSideProps({ query }) {
   const { text } = query;
-  return { props: { text } };
+  return { props: { text:text?text:"" } };
 }
 
 export default function Home({text}) {
